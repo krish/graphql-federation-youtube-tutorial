@@ -1,0 +1,52 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+directive @extends on OBJECT | INTERFACE
+
+directive @external on OBJECT | FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+type Project {
+  id: ID!
+  employees: [Employee!]!
+}
+
+type Location {
+  id: ID!
+  employees: [Employee!]!
+}
+
+type Employee {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  designation: String!
+  city: String
+  project: Project!
+  location: Location!
+  projectId: String!
+  locationId: String!
+}
+
+type Query {
+  getAllEmployees: [Employee!]!
+  findOne(id: String!): Employee!
+}
+
+type Mutation {
+  createEmployee(employeeInput: EmployeeCreateDTO!): Employee!
+}
+
+input EmployeeCreateDTO {
+  firstName: String!
+  lastName: String!
+  designation: String!
+  city: String
+  projectId: String!
+}

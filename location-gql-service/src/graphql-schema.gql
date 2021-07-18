@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @key(fields: String!) on OBJECT | INTERFACE
+
+directive @extends on OBJECT | INTERFACE
+
+directive @external on OBJECT | FIELD_DEFINITION
+
+directive @requires(fields: String!) on FIELD_DEFINITION
+
+directive @provides(fields: String!) on FIELD_DEFINITION
+
+type Location {
+  id: ID!
+  name: String!
+  code: Int!
+}
+
+type Query {
+  getAllLocations: [Location!]!
+  location(id: String!): Location!
+}
+
+type Mutation {
+  createLocation(location: CreateLocationInput!): Location!
+  updateLocation(location: UpdateLocationInput!): Location!
+  removeLocation(id: String!): Location!
+}
+
+input CreateLocationInput {
+  name: String!
+  code: Int!
+}
+
+input UpdateLocationInput {
+  id: String!
+  name: String!
+  code: Int!
+}
