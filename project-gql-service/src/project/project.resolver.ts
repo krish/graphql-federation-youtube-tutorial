@@ -34,7 +34,9 @@ export class ProjectResolver {
   }
 
   @ResolveReference()
-  resolvereferance(ref: { __typename: string, id: string }) {
+  resolvereferance(ref: { __typename: string, id: string, code: number }) {
+    console.log("id", ref.id)
+    console.log("code", ref.code)
     return this.projectService.findOne(ref.id);
   }
 }

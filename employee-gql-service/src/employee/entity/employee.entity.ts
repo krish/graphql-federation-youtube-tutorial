@@ -34,6 +34,9 @@ export class Employee {
     @Column()
     @Field()
     projectId: string
+    @Field()
+    @Column()
+    projectCode: number
 
     @Column()
     @Field()

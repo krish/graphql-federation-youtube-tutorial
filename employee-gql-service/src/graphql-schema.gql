@@ -14,6 +14,7 @@ directive @provides(fields: String!) on FIELD_DEFINITION
 
 type Project {
   id: ID!
+  code: Int!
   employees: [Employee!]!
 }
 
@@ -31,6 +32,7 @@ type Employee {
   project: Project!
   location: Location!
   projectId: String!
+  projectCode: Float!
   locationId: String!
 }
 

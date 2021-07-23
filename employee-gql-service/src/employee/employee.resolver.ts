@@ -25,7 +25,8 @@ export class EmployeeResolver {
 
     @ResolveField((of) => Project)
     project(@Parent() employee: Employee) {
-        return { __typename: "Project", id: employee.projectId }
+        console.log('resolving project with', employee.projectId + " and " + employee.projectCode)
+        return { __typename: "Project", id: employee.projectId, code: employee.projectCode }
     }
 
     @ResolveField((of) => Location)

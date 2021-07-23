@@ -2,7 +2,9 @@ import { ObjectType, Field, Int, Directive, ID } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
+//@Directive('@key(fields: ["id","code"])')
 @Directive('@key(fields: "id")')
+@Directive('@key(fields: "code")')
 @Entity()
 export class Project {
 
