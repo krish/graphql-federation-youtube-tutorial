@@ -6,29 +6,27 @@ import { Employee } from './entity/employee.entity';
 
 @Injectable()
 export class EmployeeService {
+  constructor(
+    @InjectRepository(Employee)
+    private employeeRepository: Repository<Employee>,
+  ) {}
 
-    constructor(@InjectRepository(Employee) private employeeRepository: Repository<Employee>) {
+  async findAll(): Promise<Employee[]> {
+    return this.employeeRepository.find();
+  }
+  async findOne(id: string) {
+    return this.employeeRepository.findOne(id);
+  }
 
-    }
+  async create(employee: EmployeeCreateDTO): Promise<Employee> {
+    const emp = this.employeeRepository.create(employee);
+    return this.employeeRepository.save(emp);
+  }
 
-    async findAll(): Promise<Employee[]> {
-        return this.employeeRepository.find();
-    }
-    async findOne(id: string) {
-        return this.employeeRepository.findOne(id)
-    }
-
-    async create(employee: EmployeeCreateDTO): Promise<Employee> {
-
-        let emp = this.employeeRepository.create(employee);
-        return this.employeeRepository.save(emp)
-
-    }
-
-    async forProject(id: string) {
-        return await this.employeeRepository.find({ "projectId": id })
-    }
-    async forLocation(id: string) {
-        return await this.employeeRepository.find({ "locationId": id })
-    }
+  async forProject(id: string) {
+    return await this.employeeRepository.find({ projectId: id });
+  }
+  async forLocation(id: string) {
+    return await this.employeeRepository.find({ locationId: id });
+  }
 }

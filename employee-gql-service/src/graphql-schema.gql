@@ -14,6 +14,7 @@ directive @provides(fields: String!) on FIELD_DEFINITION
 
 type Project {
   id: ID!
+  code: Int
   employees: [Employee!]!
 }
 
@@ -32,11 +33,12 @@ type Employee {
   location: Location!
   projectId: String!
   locationId: String!
+  projectCode: String
 }
 
 type Query {
   getAllEmployees: [Employee!]!
-  findOne(id: String!): Employee!
+  findEmployee(id: String!): Employee!
 }
 
 type Mutation {
