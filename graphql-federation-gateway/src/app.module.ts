@@ -1,20 +1,56 @@
+import { RemoteGraphQLDataSource } from '@apollo/gateway';
 import { Module } from '@nestjs/common';
-import { GraphQLGatewayModule } from '@nestjs/graphql';
+import { GATEWAY_BUILD_SERVICE, GraphQLGatewayModule } from '@nestjs/graphql';
+import { json } from 'express';
+
+class SharedDataProvider extends RemoteGraphQLDataSource {
+  async willSendRequest({ request, context }) {
+    if (request.variables && request.variables.representations) {
+      request.variables.representations.map((e) => {
+        e.__data = context.shared;
+      });
+    }
+  }
+}
+@Module({
+  providers: [
+    {
+      provide: SharedDataProvider,
+      useValue: SharedDataProvider,
+    },
+    {
+      provide: GATEWAY_BUILD_SERVICE,
+      useFactory: (SharedDataProvider) => {
+        return ({ name, url }) => new SharedDataProvider({ url });
+      },
+      inject: [SharedDataProvider],
+    },
+  ],
+  exports: [GATEWAY_BUILD_SERVICE],
+})
+class BuildServiceModule {}
 
 @Module({
-  imports: [GraphQLGatewayModule.forRoot({
-    server: {
-      cors: true
-    },
-    gateway: {
-      serviceList: [
-        { name: "employees", url: "http://localhost:3000/graphql" },
-        { name: "projects", url: "http://localhost:3001/graphql" },
-        { name: "locations", url: "http://localhost:3002/graphql" },
-      ]
-    }
-  })],
-  controllers: [],
-  providers: [],
+  imports: [
+    GraphQLGatewayModule.forRootAsync({
+      useFactory: async () => ({
+        gateway: {
+          serviceList: [
+            { name: 'employees', url: 'http://localhost:3000/graphql' },
+            { name: 'projects', url: 'http://localhost:3001/graphql' },
+            { name: 'locations', url: 'http://localhost:3002/graphql' },
+          ],
+        },
+        server: {
+          cors: true,
+          context: ({ req }) => ({
+            shared: req.headers['x-shared-data'],
+          }),
+        },
+      }),
+      imports: [BuildServiceModule],
+      inject: [GATEWAY_BUILD_SERVICE],
+    }),
+  ],
 })
-export class AppModule { }
+export class AppModule {}

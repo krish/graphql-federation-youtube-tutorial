@@ -6,15 +6,20 @@ import {
   ResolveField,
   Parent,
   Info,
+  CONTEXT,
 } from '@nestjs/graphql';
 import { EmployeeCreateDTO } from './dto/create-employee.input';
 import { EmployeeService } from './employee.service';
 import { Employee } from './entity/employee.entity';
 import { Project } from './entity/project.entity';
 import { Location } from './entity/location.entity';
+import { Inject } from '@nestjs/common';
 @Resolver(() => Employee)
 export class EmployeeResolver {
-  constructor(private employeeService: EmployeeService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    @Inject(CONTEXT) private ctx,
+  ) {}
 
   @Query(() => [Employee], { name: 'getAllEmployees' })
   findAll() {
@@ -45,7 +50,9 @@ export class EmployeeResolver {
 
   @ResolveField((of) => Location)
   location(@Parent() employee: Employee) {
-    return { __typename: 'Location', id: employee.locationId };
+    this.ctx.krish = { name: 'krishantha' };
+    console.log('location field resolved');
+    return { __typename: 'Location', id: employee.locationId, fields: 'dddd' };
   }
 
   /* @ResolveField(() => Project)
