@@ -1,14 +1,28 @@
 import { RemoteGraphQLDataSource } from '@apollo/gateway';
+import { compareStrings } from '@graphql-tools/utils';
 import { Module } from '@nestjs/common';
-import { GATEWAY_BUILD_SERVICE, GraphQLGatewayModule } from '@nestjs/graphql';
-import { json } from 'express';
+import {
+  GATEWAY_BUILD_SERVICE,
+  GraphQLGatewayModule,
+  ObjectType,
+} from '@nestjs/graphql';
+import { graphQlQueryToJson } from 'graphql-query-to-json';
 
 class SharedDataProvider extends RemoteGraphQLDataSource {
   async willSendRequest({ request, context }) {
-    if (request.variables && request.variables.representations) {
-      request.variables.representations.map((e) => {
-        e.__data = context.shared;
+    if (context.query) {
+      let queryJson = graphQlQueryToJson(context.query);
+      let args = {};
+      console.log('---', Object.keys(queryJson.query));
+      console.log(request);
+      Object.keys(queryJson.query).forEach((key) => {
+        args[key] = queryJson.query[key].__args;
       });
+      if (request.variables && request.variables.representations) {
+        request.variables.representations.map((e) => {
+          e.__args = args;
+        });
+      }
     }
   }
 }
@@ -44,7 +58,7 @@ class BuildServiceModule {}
         server: {
           cors: true,
           context: ({ req }) => ({
-            shared: req.headers['x-shared-data'],
+            query: req.body.query,
           }),
         },
       }),

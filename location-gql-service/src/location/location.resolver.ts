@@ -47,9 +47,8 @@ export class LocationResolver {
   }
 
   @ResolveReference()
-  resolvereferance(ref: { __typename: string; id: string; __data: any }) {
-    console.log(ref.__data);
-    console.log('--------------------------');
+  resolvereferance(ref: { __typename: string; id: string; __args: any }) {
+    console.log(ref.__args);
     return this.locationService.findOne(ref.id);
   }
 }
